@@ -4,21 +4,21 @@ export default function Welcome(props) {
     return (
         <>
             <Head title="Welcome" />
-            <div className="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
+            <div className="relative flex items-top justify-center min-h-screen bg-gray-100  sm:items-center sm:pt-0">
                 <div className="fixed top-0 right-0 px-6 py-4 sm:block">
                     {props.auth.user ? (
-                        <Link href={route('dashboard')} className="text-sm text-gray-700 dark:text-gray-500 underline">
+                        <Link href={route('dashboard')} className="text-sm text-gray-700  underline">
                             Dashboard
                         </Link>
                     ) : (
                         <>
-                            <Link href={route('login')} className="text-sm text-gray-700 dark:text-gray-500 underline">
+                            <Link href={route('login')} className="text-sm text-gray-700  underline">
                                 Log in
                             </Link>
 
                             <Link
                                 href={route('register')}
-                                className="ml-4 text-sm text-gray-700 dark:text-gray-500 underline"
+                                className="ml-4 text-sm text-gray-700  underline"
                             >
                                 Register
                             </Link>
@@ -26,7 +26,7 @@ export default function Welcome(props) {
                     )}
                 </div>
 
-                <div className="max-w-6xl mx-auto sm:px-6 lg:px-8">
+                <div className="max-w-full mx-auto sm:px-6 lg:px-8">
                     <div className="flex justify-center pt-8 sm:justify-start sm:pt-0">
                         <svg
                             viewBox="0 0 651 192"
@@ -40,7 +40,7 @@ export default function Welcome(props) {
                         </svg>
                     </div>
 
-                    <div className="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
+                    <div className="mt-8 bg-white  overflow-hidden shadow sm:rounded-lg">
                         <div className="grid grid-cols-1 md:grid-cols-2">
                             <div className="p-6">
                                 <div className="flex items-center">
@@ -59,7 +59,7 @@ export default function Welcome(props) {
                                     <div className="ml-4 text-lg leading-7 font-semibold">
                                         <a
                                             href="https://laravel.com/docs"
-                                            className="underline text-gray-900 dark:text-white"
+                                            className="underline text-gray-900 "
                                         >
                                             Documentation
                                         </a>
@@ -67,7 +67,7 @@ export default function Welcome(props) {
                                 </div>
 
                                 <div className="ml-12">
-                                    <div className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
+                                    <div className="mt-2 text-gray-600  text-sm">
                                         Laravel has wonderful, thorough documentation covering every aspect of the
                                         framework. Whether you are new to the framework or have previous experience with
                                         Laravel, we recommend reading all of the documentation from beginning to end.
@@ -75,7 +75,7 @@ export default function Welcome(props) {
                                 </div>
                             </div>
 
-                            <div className="p-6 border-t border-gray-200 dark:border-gray-700 md:border-t-0 md:border-l">
+                            <div className="p-6 border-t border-gray-200  md:border-t-0 md:border-l">
                                 <div className="flex items-center">
                                     <svg
                                         fill="none"
@@ -93,7 +93,7 @@ export default function Welcome(props) {
                                     <div className="ml-4 text-lg leading-7 font-semibold">
                                         <a
                                             href="https://laracasts.com"
-                                            className="underline text-gray-900 dark:text-white"
+                                            className="underline text-gray-900 "
                                         >
                                             Laracasts
                                         </a>
@@ -101,7 +101,7 @@ export default function Welcome(props) {
                                 </div>
 
                                 <div className="ml-12">
-                                    <div className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
+                                    <div className="mt-2 text-gray-600  text-sm">
                                         Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript
                                         development. Check them out, see for yourself, and massively level up your
                                         development skills in the process.
@@ -109,7 +109,7 @@ export default function Welcome(props) {
                                 </div>
                             </div>
 
-                            <div className="p-6 border-t border-gray-200 dark:border-gray-700">
+                            <div className="p-6 border-t border-gray-200 ">
                                 <div className="flex items-center">
                                     <svg
                                         fill="none"
@@ -126,7 +126,7 @@ export default function Welcome(props) {
                                     <div className="ml-4 text-lg leading-7 font-semibold">
                                         <a
                                             href="https://laravel-news.com/"
-                                            className="underline text-gray-900 dark:text-white"
+                                            className="underline text-gray-900 "
                                         >
                                             Laravel News
                                         </a>
@@ -134,7 +134,7 @@ export default function Welcome(props) {
                                 </div>
 
                                 <div className="ml-12">
-                                    <div className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
+                                    <div className="mt-2 text-gray-600  text-sm">
                                         Laravel News is a community driven portal and newsletter aggregating all of the
                                         latest and most important news in the Laravel ecosystem, including new package
                                         releases and tutorials.
@@ -142,7 +142,7 @@ export default function Welcome(props) {
                                 </div>
                             </div>
 
-                            <div className="p-6 border-t border-gray-200 dark:border-gray-700 md:border-l">
+                            <div className="p-6 border-t border-gray-200  md:border-l">
                                 <div className="flex items-center">
                                     <svg
                                         fill="none"
@@ -156,13 +156,13 @@ export default function Welcome(props) {
                                         <path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
 
-                                    <div className="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white">
+                                    <div className="ml-4 text-lg leading-7 font-semibold text-gray-900 ">
                                         Vibrant Ecosystem
                                     </div>
                                 </div>
 
                                 <div className="ml-12">
-                                    <div className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
+                                    <div className="mt-2 text-gray-600  text-sm">
                                         Laravel's robust library of first-party tools and libraries, such as{' '}
                                         <a href="https://forge.laravel.com" className="underline">
                                             Forge
