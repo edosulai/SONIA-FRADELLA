@@ -21,8 +21,7 @@ class DokterFactory extends Factory
         return [
             'nama_dokter' => $this->faker->name,
             'no_identitas' => $this->faker->numerify('########'),
-            'unit_id' => Unit::inRandomOrder()->first()->id,
-            // 'specialis_id' => Spesialis::inRandomOrder()->first()->id,
+            'spesialis_id' => Spesialis::inRandomOrder()->first()->id,
             // 'awal_jam_praktek' => $this->faker->time('H:i:s'),
             // 'akhir_jam_praktek' => $this->faker->time('H:i:s'),
         ];

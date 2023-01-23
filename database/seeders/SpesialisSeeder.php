@@ -17,6 +17,8 @@ class SpesialisSeeder extends Seeder
     {
         DB::table('spesialis')->insert([
             [
+                'nama_spesialis' => "Umum"
+            ], [
                 'nama_spesialis' => "Cardiologist"
             ], [
                 'nama_spesialis' => "Pediatrician"

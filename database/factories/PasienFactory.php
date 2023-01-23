@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Registran;
+use App\Models\Unit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,6 +20,7 @@ class PasienFactory extends Factory
     {
         return [
             'registran_id' => Registran::inRandomOrder()->first()->id,
+            'unit_id' => Unit::inRandomOrder()->first()->id,
         ];
     }
 }

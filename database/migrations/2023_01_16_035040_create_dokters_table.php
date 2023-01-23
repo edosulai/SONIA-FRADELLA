@@ -17,8 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_dokter');
             $table->string('no_identitas');
-            $table->foreignId('unit_id')->constrained('units')->onDelete('cascade');
-            // $table->foreignId('specialis_id')->constrained('specialis')->onDelete('cascade');
+            $table->foreignId('spesialis_id')->constrained('spesialis')->onDelete('cascade');
             // $table->time('awal_jam_praktek');
             // $table->time('akhir_jam_praktek');
             $table->timestamps();
