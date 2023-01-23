@@ -17,7 +17,7 @@ class UnitFactory extends Factory
     public function definition()
     {
         return [
-            'nama_spesialis' => $this->faker->name,
+            'nama_unit' => $this->faker->name,
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Dokter;
 use App\Http\Requests\StoreDokterRequest;
 use App\Http\Requests\UpdateDokterRequest;
+use Inertia\Inertia;
 
 class DokterController extends Controller
 {
@@ -15,7 +16,7 @@ class DokterController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Dokter/Index');
     }
 
     /**

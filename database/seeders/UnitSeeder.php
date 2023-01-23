@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Unit;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class UnitSeeder extends Seeder
 {
@@ -15,6 +16,18 @@ class UnitSeeder extends Seeder
      */
     public function run()
     {
-        Unit::factory(10)->create();
+        DB::table('units')->insert([
+            [
+                'nama_unit' => "Umum"
+            ], [
+                'nama_unit' => "Balita"
+            ], [
+                'nama_unit' => "Lansia"
+            ], [
+                'nama_unit' => "THT"
+            ], [
+                'nama_unit' => "Poliklinik"
+            ],
+        ]);
     }
 }

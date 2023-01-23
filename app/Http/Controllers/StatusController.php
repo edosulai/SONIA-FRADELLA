@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Status;
 use App\Http\Requests\StoreStatusRequest;
 use App\Http\Requests\UpdateStatusRequest;
+use Inertia\Inertia;
 
 class StatusController extends Controller
 {
@@ -15,7 +16,7 @@ class StatusController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Status');
     }
 
     /**
