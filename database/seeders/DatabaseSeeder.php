@@ -16,8 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(UserSeeder::class);
         $this->call(UnitSeeder::class);
+        $this->call(SpesialisSeeder::class);
         $this->call(DokterSeeder::class);
-        $this->call(StatusSeeder::class);
+        $this->call(RegistranSeeder::class);
         $this->call(PasienSeeder::class);
         $this->call(KunjunganSeeder::class);
     }

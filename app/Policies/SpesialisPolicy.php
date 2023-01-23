@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Status;
+use App\Models\Spesialis;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class StatusPolicy
+class SpesialisPolicy
 {
     use HandlesAuthorization;
 
@@ -25,10 +25,10 @@ class StatusPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Status  $status
+     * @param  \App\Models\Spesialis  $spesialis
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Status $status)
+    public function view(User $user, Spesialis $spesialis)
     {
         //
     }
@@ -48,10 +48,10 @@ class StatusPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Status  $status
+     * @param  \App\Models\Spesialis  $spesialis
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Status $status)
+    public function update(User $user, Spesialis $spesialis)
     {
         //
     }
@@ -60,10 +60,10 @@ class StatusPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Status  $status
+     * @param  \App\Models\Spesialis  $spesialis
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Status $status)
+    public function delete(User $user, Spesialis $spesialis)
     {
         //
     }
@@ -72,10 +72,10 @@ class StatusPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Status  $status
+     * @param  \App\Models\Spesialis  $spesialis
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Status $status)
+    public function restore(User $user, Spesialis $spesialis)
     {
         //
     }
@@ -84,10 +84,10 @@ class StatusPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Status  $status
+     * @param  \App\Models\Spesialis  $spesialis
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Status $status)
+    public function forceDelete(User $user, Spesialis $spesialis)
     {
         //
     }

@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('statuses', function (Blueprint $table) {
+        Schema::create('registrans', function (Blueprint $table) {
             $table->id();
             $table->string('nama_pasien');
             $table->string('nama_kepala_keluarga');
-            $table->string('no_telp');
-            $table->string('nik');
+            $table->string('no_kartu');
             $table->integer('umur');
             $table->text('alamat');
             $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']);

@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Status;
+use App\Models\Registran;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class StatusSeeder extends Seeder
+class RegistranSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,6 +15,6 @@ class StatusSeeder extends Seeder
      */
     public function run()
     {
-        Status::factory(600)->create();
+        Registran::factory(600)->create();
     }
 }

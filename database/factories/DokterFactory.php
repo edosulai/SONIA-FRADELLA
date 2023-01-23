@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Spesialis;
 use App\Models\Unit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,8 +20,11 @@ class DokterFactory extends Factory
     {
         return [
             'nama_dokter' => $this->faker->name,
-            'no_telp' => $this->faker->phoneNumber,
+            'no_identitas' => $this->faker->numerify('########'),
             'unit_id' => Unit::inRandomOrder()->first()->id,
+            // 'specialis_id' => Spesialis::inRandomOrder()->first()->id,
+            // 'awal_jam_praktek' => $this->faker->time('H:i:s'),
+            // 'akhir_jam_praktek' => $this->faker->time('H:i:s'),
         ];
     }
 }

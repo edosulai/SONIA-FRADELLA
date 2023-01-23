@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Status;
-use App\Http\Requests\StoreStatusRequest;
-use App\Http\Requests\UpdateStatusRequest;
-use Inertia\Inertia;
+use App\Models\Spesialis;
+use App\Http\Requests\StoreSpesialisRequest;
+use App\Http\Requests\UpdateSpesialisRequest;
 
-class StatusController extends Controller
+class SpesialisController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +15,7 @@ class StatusController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Status');
+        //
     }
 
     /**
@@ -32,10 +31,10 @@ class StatusController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreStatusRequest  $request
+     * @param  \App\Http\Requests\StoreSpesialisRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreStatusRequest $request)
+    public function store(StoreSpesialisRequest $request)
     {
         //
     }
@@ -43,10 +42,10 @@ class StatusController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Status  $status
+     * @param  \App\Models\Spesialis  $spesialis
      * @return \Illuminate\Http\Response
      */
-    public function show(Status $status)
+    public function show(Spesialis $spesialis)
     {
         //
     }
@@ -54,10 +53,10 @@ class StatusController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Status  $status
+     * @param  \App\Models\Spesialis  $spesialis
      * @return \Illuminate\Http\Response
      */
-    public function edit(Status $status)
+    public function edit(Spesialis $spesialis)
     {
         //
     }
@@ -65,11 +64,11 @@ class StatusController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateStatusRequest  $request
-     * @param  \App\Models\Status  $status
+     * @param  \App\Http\Requests\UpdateSpesialisRequest  $request
+     * @param  \App\Models\Spesialis  $spesialis
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateStatusRequest $request, Status $status)
+    public function update(UpdateSpesialisRequest $request, Spesialis $spesialis)
     {
         //
     }
@@ -77,10 +76,10 @@ class StatusController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Status  $status
+     * @param  \App\Models\Spesialis  $spesialis
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Status $status)
+    public function destroy(Spesialis $spesialis)
     {
         //
     }

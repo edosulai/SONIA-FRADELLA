@@ -3,7 +3,7 @@
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\StatusController;
+use App\Http\Controllers\RegistranController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/pasien', [PasienController::class, 'index'])->name('pasien');
         Route::get('/dokter', [DokterController::class, 'index'])->name('dokter');
-        Route::get('/status', [StatusController::class, 'index'])->name('status');
+        Route::get('/registran', [RegistranController::class, 'index'])->name('registran');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

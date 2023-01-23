@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Status;
+use App\Models\Registran;
 use App\Models\Unit;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,7 +19,7 @@ class KunjunganFactory extends Factory
     public function definition()
     {
         return [
-            'status_id' => Status::inRandomOrder()->first()->id,
+            'registran_id' => Registran::inRandomOrder()->first()->id,
             'unit_id' => Unit::inRandomOrder()->first()->id,
         ];
     }

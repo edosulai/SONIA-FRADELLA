@@ -2,13 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Registran;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Pasien>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Spesialis>
  */
-class PasienFactory extends Factory
+class SpesialisFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,7 +17,7 @@ class PasienFactory extends Factory
     public function definition()
     {
         return [
-            'registran_id' => Registran::inRandomOrder()->first()->id,
+            'nama_spesialis' => $this->faker->name,
         ];
     }
 }

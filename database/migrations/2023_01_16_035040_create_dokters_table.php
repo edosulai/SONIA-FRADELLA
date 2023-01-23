@@ -16,8 +16,11 @@ return new class extends Migration
         Schema::create('dokters', function (Blueprint $table) {
             $table->id();
             $table->string('nama_dokter');
-            $table->string('no_telp');
+            $table->string('no_identitas');
             $table->foreignId('unit_id')->constrained('units')->onDelete('cascade');
+            // $table->foreignId('specialis_id')->constrained('specialis')->onDelete('cascade');
+            // $table->time('awal_jam_praktek');
+            // $table->time('akhir_jam_praktek');
             $table->timestamps();
         });
     }

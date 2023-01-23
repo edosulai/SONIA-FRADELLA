@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Unit;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class UnitSeeder extends Seeder
+class SpesialisSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,13 +15,13 @@ class UnitSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('units')->insert([
+        DB::table('spesialis')->insert([
             [
-                'jenis_unit' => "Umum"
+                'nama_spesialis' => "Cardiologist"
             ], [
-                'jenis_unit' => "Balita"
+                'nama_spesialis' => "Pediatrician"
             ], [
-                'jenis_unit' => "Lansia"
+                'nama_spesialis' => "Neurologist"
             ],
         ]);
     }

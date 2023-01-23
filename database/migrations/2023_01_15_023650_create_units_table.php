@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_unit');
+            $table->string('jenis_unit');
             $table->timestamps();
         });
     }
