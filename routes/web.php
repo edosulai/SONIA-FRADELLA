@@ -35,8 +35,12 @@ Route::middleware('auth')->group(function () {
             return Inertia::render('Dashboard');
         })->name('dashboard');
 
-        Route::get('/pasien', [PasienController::class, 'index'])->name('pasien');
         Route::get('/dokter', [DokterController::class, 'index'])->name('dokter');
+        Route::get('/dokter/{id}', [DokterController::class, 'edit'])->name('dokter.edit');
+        Route::get('/dokter/new', [DokterController::class, 'create'])->name('dokter.new');
+        Route::post('/dokter/new', [DokterController::class, 'store'])->name('dokter.new');
+
+        Route::get('/pasien', [PasienController::class, 'index'])->name('pasien');
         Route::get('/registran', [RegistranController::class, 'index'])->name('registran');
     });
 

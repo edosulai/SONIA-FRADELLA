@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Dokter;
 use App\Http\Requests\StoreDokterRequest;
 use App\Http\Requests\UpdateDokterRequest;
+use App\Models\Spesialis;
 use Inertia\Inertia;
 
 class DokterController extends Controller
@@ -16,7 +17,10 @@ class DokterController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Dokter/Index');
+        return Inertia::render('Dokter/Index', [
+            'data' => Dokter::selectRaw('dokters.*, spesialis.nama_spesialis')
+                ->join('spesialis', 'spesialis.id', '=', 'dokters.spesialis_id')->get(),
+        ]);
     }
 
     /**
@@ -26,7 +30,10 @@ class DokterController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Dokter/Create', [
+            'status' => session('status'),
+            'spesialis' => Spesialis::all()
+        ]);
     }
 
     /**
@@ -37,7 +44,13 @@ class DokterController extends Controller
      */
     public function store(StoreDokterRequest $request)
     {
-        //
+        Dokter::create([
+            'nama_dokter' => $request->nama_dokter,
+            'no_identitas' => $request->no_identitas,
+            'spesialis_id' => $request->spesialis_id,
+        ]);
+
+        return redirect('dokter');
     }
 
     /**

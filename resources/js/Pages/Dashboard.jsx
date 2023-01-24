@@ -1,11 +1,10 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 
-export default function Dashboard(props) {
+export default function Dashboard({ auth }) {
     return (
         <AuthenticatedLayout
-            auth={props.auth}
-            errors={props.errors}
+            auth={auth}
             header={
                 <h2 className="font-semibold text-xl text-gray-800  leading-tight">
                     Dashboard
@@ -19,7 +18,6 @@ export default function Dashboard(props) {
                     <div className="bg-white  overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900 ">
                             <div className="flex gap-16">
-
                                 <div class="pl-1 w-96 h-20 bg-green-400 rounded-lg shadow-md">
                                     <div class="flex w-full h-full py-2 px-4 bg-white rounded-lg justify-between">
                                         <div class="my-auto">
@@ -100,7 +98,6 @@ export default function Dashboard(props) {
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>

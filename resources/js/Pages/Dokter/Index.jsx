@@ -1,36 +1,89 @@
 import Table from "@/Components/Table";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
+import ReactDOMServer from "react-dom/server";
 
-export default function Index(props) {
-    const columns = [{ data: "nama" }, { data: "umur" }, { data: "alamat" }];
+export default function Index({ data, auth }) {
+    const celltoLink = function (data, td, rowIndex, cellIndex) {
+        return ReactDOMServer.renderToString(
+            <Link
+                className="flex items-center cursor-pointer px-4 py-2"
+                href={route("dokter.edit", data[1])}
+                tabIndex="-1"
+            >
+                {data[0]}
+            </Link>
+        );
+    };
 
-    const data = [
+    const columnSetting = [
+        { from: "no", to: "No", select: 0, sort: "asc", render: celltoLink },
         {
-            nama: "John Doe",
-            umur: 32,
-            alamat: "New York",
+            from: "nama_dokter",
+            to: "Nama Dokter",
+            select: 1,
+            render: celltoLink,
         },
         {
-            nama: "Jane Smith",
-            umur: 28,
-            alamat: "Los Angeles",
+            from: "no_identitas",
+            to: "No Identitas",
+            select: 2,
+            render: celltoLink,
         },
         {
-            nama: "Bob Johnson",
-            umur: 45,
-            alamat: "Chicago",
+            from: "nama_spesialis",
+            to: "Nama Spesialis",
+            select: 3,
+            render: celltoLink,
         },
+        { from: "id", to: "id", select: 4, hidden: true },
     ];
+
+    const dataWithIndex = _.map(data, (item, index) =>
+        _.extend({}, item, { no: index + 1 })
+    );
+
+    const filteredData = _.map(dataWithIndex, (obj) =>
+        _.pick(obj, _.map(columnSetting, "from"))
+    );
+
+    const fromTo = _.map(filteredData, (obj) =>
+        _.reduce(
+            columnSetting,
+            (result, m) => {
+                result[m.to] = obj[m.from];
+                return result;
+            },
+            {}
+        )
+    );
+
+    const newData = _.map(fromTo, function (obj) {
+        return _.mapValues(obj, function (value, key) {
+            if (key === "id") {
+                return;
+            }
+            return [value, obj.id];
+        });
+    });
 
     return (
         <AuthenticatedLayout
-            auth={props.auth}
-            errors={props.errors}
+            auth={auth}
             header={
-                <h2 className="font-semibold text-xl text-gray-800  leading-tight">
-                    Dokter
-                </h2>
+                <div className="flex">
+                    <h2 className="font-semibold text-xl text-gray-800  leading-tight">
+                        Dokter
+                    </h2>
+                    <div className="space-x-4 -my-px ml-10 flex">
+                        <Link
+                            href={route("dokter.new")}
+                            className="rounded block px-4 py-2 text-sm leading-5 text-light-700 hover:bg-light-100 focus:outline-none focus:bg-light-10 transition duration-150 ease-in-out"
+                        >
+                            Tambah Data
+                        </Link>
+                    </div>
+                </div>
             }
         >
             <Head title="Dokter" />
@@ -39,7 +92,7 @@ export default function Index(props) {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900 ">
-                            <Table data={data} columns={columns} />
+                            <Table data={newData} columns={columnSetting} />
                         </div>
                     </div>
                 </div>
