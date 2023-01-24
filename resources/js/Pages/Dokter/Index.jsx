@@ -3,7 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import ReactDOMServer from "react-dom/server";
 
-export default function Index({ data, auth }) {
+export default function Index({ data, auth, status }) {
     const celltoLink = function (data, td, rowIndex, cellIndex) {
         return ReactDOMServer.renderToString(
             <Link
@@ -92,6 +92,12 @@ export default function Index({ data, auth }) {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900 ">
+                            {status && (
+                                <div className="mb-4 font-medium text-sm text-green-600">
+                                    {status}
+                                </div>
+                            )}
+
                             <Table data={newData} columns={columnSetting} />
                         </div>
                     </div>

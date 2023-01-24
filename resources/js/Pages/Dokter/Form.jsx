@@ -1,18 +1,42 @@
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head, Link, useForm } from "@inertiajs/react";
+import { useEffect, useState } from "react";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import TextInput from "@/Components/TextInput";
 import PrimaryButton from "@/Components/PrimaryButton";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, useForm } from "@inertiajs/react";
-import { useEffect } from "react";
 import SelectInput from "@/Components/SelectInput";
+import Modal from "@/Components/Modal";
+import SecondaryButton from "@/Components/SecondaryButton";
+import DangerButton from "@/Components/DangerButton";
 
-export default function Index({ auth, status, spesialis }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        nama_dokter: "",
-        no_identitas: 0,
-        spesialis_id: 0,
+export default function Index({
+    auth,
+    status,
+    spesialis,
+    title,
+    dokter = null,
+}) {
+    const [confirmingDokterDeletion, setConfirmingDokterDeletion] =
+        useState(false);
+
+    const useFormInertia = useForm({
+        nama_dokter: dokter ? dokter.nama_dokter : "",
+        no_identitas: dokter ? dokter.no_identitas : 0,
+        spesialis_id: dokter ? dokter.spesialis_id : 0,
     });
+
+    const { data, setData, processing, errors, reset } = useFormInertia;
+
+    const submit = (e) => {
+        e.preventDefault();
+
+        if (dokter) {
+            useFormInertia.put(route("dokter.edit"));
+        } else {
+            useFormInertia.post(route("dokter.new"));
+        }
+    };
 
     useEffect(() => {
         return () => {
@@ -29,22 +53,16 @@ export default function Index({ auth, status, spesialis }) {
         );
     };
 
-    const submit = (e) => {
-        e.preventDefault();
-
-        post(route("dokter.new"));
-    };
-
     return (
         <AuthenticatedLayout
             auth={auth}
             header={
                 <h2 className="font-semibold text-xl text-gray-800  leading-tight">
-                    Dokter
+                    {title}
                 </h2>
             }
         >
-            <Head title="Dokter" />
+            <Head title={title} />
 
             <div className="py-12">
                 <div className="max-w-xl mx-auto sm:px-6 lg:px-8">
@@ -126,12 +144,32 @@ export default function Index({ auth, status, spesialis }) {
                                     />
                                 </div>
 
-                                <div className="flex items-center justify-end mt-4">
+                                <div
+                                    className={
+                                        dokter
+                                            ? "flex items-center justify-between mt-4"
+                                            : "flex items-center justify-end mt-4"
+                                    }
+                                >
+                                    {dokter && (
+                                        <DangerButton
+                                            type="button"
+                                            className="mr-4"
+                                            processing={processing}
+                                            onClick={() =>
+                                                setConfirmingDokterDeletion(
+                                                    true
+                                                )
+                                            }
+                                        >
+                                            Hapus Data
+                                        </DangerButton>
+                                    )}
                                     <PrimaryButton
                                         className="ml-4"
                                         processing={processing}
                                     >
-                                        Simpan Data
+                                        {dokter ? "Ubah Data" : "Simpan Data"}
                                     </PrimaryButton>
                                 </div>
                             </form>
@@ -139,6 +177,48 @@ export default function Index({ auth, status, spesialis }) {
                     </div>
                 </div>
             </div>
+
+            <Modal
+                show={confirmingDokterDeletion}
+                onClose={() => setConfirmingDokterDeletion(false)}
+            >
+                <div className="p-6">
+                    <h2 className="text-lg font-medium text-gray-900 ">
+                        Apakah kamu yakin ingin menghapus data dokter{" "}
+                        <b>{dokter.nama_dokter}</b> ?
+                    </h2>
+
+                    <p className="mt-1 text-sm text-gray-600 ">
+                        Setelah data dihapus, semua sumber daya dan datanya akan
+                        dihapus secara permanen.
+                    </p>
+
+                    <div className="mt-6 flex justify-end">
+                        <SecondaryButton
+                            onClick={() => setConfirmingDokterDeletion(false)}
+                        >
+                            Batalkan
+                        </SecondaryButton>
+
+                        <DangerButton
+                            className="ml-3"
+                            processing={processing}
+                            onClick={() => {
+                                useFormInertia.delete(
+                                    route("dokter.delete", dokter.id),
+                                    {
+                                        preserveScroll: true,
+                                        onSuccess: () =>
+                                            setConfirmingDokterDeletion(false),
+                                    }
+                                );
+                            }}
+                        >
+                            Hapus Data
+                        </DangerButton>
+                    </div>
+                </div>
+            </Modal>
         </AuthenticatedLayout>
     );
 }

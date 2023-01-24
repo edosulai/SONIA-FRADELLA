@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Dokter;
 use App\Http\Requests\StoreDokterRequest;
 use App\Http\Requests\UpdateDokterRequest;
+use Illuminate\Http\Request;
 use App\Models\Spesialis;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class DokterController extends Controller
@@ -20,6 +22,7 @@ class DokterController extends Controller
         return Inertia::render('Dokter/Index', [
             'data' => Dokter::selectRaw('dokters.*, spesialis.nama_spesialis')
                 ->join('spesialis', 'spesialis.id', '=', 'dokters.spesialis_id')->get(),
+            'status' => session('status'),
         ]);
     }
 
@@ -30,7 +33,8 @@ class DokterController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Dokter/Create', [
+        return Inertia::render('Dokter/Form', [
+            'title' => 'Tambah Dokter',
             'status' => session('status'),
             'spesialis' => Spesialis::all()
         ]);
@@ -70,9 +74,17 @@ class DokterController extends Controller
      * @param  \App\Models\Dokter  $dokter
      * @return \Illuminate\Http\Response
      */
-    public function edit(Dokter $dokter)
+    public function edit(Request $request, Dokter $dokter)
     {
-        //
+        $dokter = $dokter->find($request->id);
+        if (is_null($dokter)) return abort(404);
+
+        return Inertia::render('Dokter/Form', [
+            'title' => 'Edit Dokter',
+            'status' => session('status'),
+            'spesialis' => Spesialis::all(),
+            'dokter' => $dokter,
+        ]);
     }
 
     /**
@@ -93,8 +105,21 @@ class DokterController extends Controller
      * @param  \App\Models\Dokter  $dokter
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Dokter $dokter)
+    public function destroy(Request $request, Dokter $dokter)
     {
-        //
+        $validator = Validator::make(['id' => $request->id], [
+            'id' => ['required', 'integer', 'exists:' . Dokter::class . ',id'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect("dokter")
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $dokter = $dokter->find($request->id);
+        $dokter->delete();
+
+        return redirect()->route('dokter')->with('status', 'Data Dokter ' . $request->nama_dokter . ' Berhasil di Hapus');
     }
 }
