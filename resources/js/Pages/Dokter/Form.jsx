@@ -17,8 +17,7 @@ export default function Index({
     title,
     dokter = null,
 }) {
-    const [confirmingDokterDeletion, setConfirmingDokterDeletion] =
-        useState(false);
+    const [confirmingDeletion, setConfirmingDeletion] = useState(false);
 
     const useFormInertia = useForm({
         nama_dokter: dokter ? dokter.nama_dokter : "",
@@ -32,7 +31,7 @@ export default function Index({
         e.preventDefault();
 
         if (dokter) {
-            useFormInertia.put(route("dokter.edit"));
+            useFormInertia.patch(route("dokter.edit", dokter.id));
         } else {
             useFormInertia.post(route("dokter.new"));
         }
@@ -127,7 +126,6 @@ export default function Index({
 
                                     <SelectInput
                                         id="spesialis_id"
-                                        type="number"
                                         name="spesialis_id"
                                         value={data.spesialis_id}
                                         className="mt-1 block w-full"
@@ -157,9 +155,7 @@ export default function Index({
                                             className="mr-4"
                                             processing={processing}
                                             onClick={() =>
-                                                setConfirmingDokterDeletion(
-                                                    true
-                                                )
+                                                setConfirmingDeletion(true)
                                             }
                                         >
                                             Hapus Data
@@ -178,47 +174,49 @@ export default function Index({
                 </div>
             </div>
 
-            <Modal
-                show={confirmingDokterDeletion}
-                onClose={() => setConfirmingDokterDeletion(false)}
-            >
-                <div className="p-6">
-                    <h2 className="text-lg font-medium text-gray-900 ">
-                        Apakah kamu yakin ingin menghapus data dokter{" "}
-                        <b>{dokter.nama_dokter}</b> ?
-                    </h2>
+            {dokter && (
+                <Modal
+                    show={confirmingDeletion}
+                    onClose={() => setConfirmingDeletion(false)}
+                >
+                    <div className="p-6">
+                        <h2 className="text-lg font-medium text-gray-900 ">
+                            Apakah kamu yakin ingin menghapus data dokter{" "}
+                            <b>{dokter.nama_dokter}</b> ?
+                        </h2>
 
-                    <p className="mt-1 text-sm text-gray-600 ">
-                        Setelah data dihapus, semua sumber daya dan datanya akan
-                        dihapus secara permanen.
-                    </p>
+                        <p className="mt-1 text-sm text-gray-600 ">
+                            Setelah data dihapus, semua sumber daya dan datanya
+                            akan dihapus secara permanen.
+                        </p>
 
-                    <div className="mt-6 flex justify-end">
-                        <SecondaryButton
-                            onClick={() => setConfirmingDokterDeletion(false)}
-                        >
-                            Batalkan
-                        </SecondaryButton>
+                        <div className="mt-6 flex justify-end">
+                            <SecondaryButton
+                                onClick={() => setConfirmingDeletion(false)}
+                            >
+                                Batalkan
+                            </SecondaryButton>
 
-                        <DangerButton
-                            className="ml-3"
-                            processing={processing}
-                            onClick={() => {
-                                useFormInertia.delete(
-                                    route("dokter.delete", dokter.id),
-                                    {
-                                        preserveScroll: true,
-                                        onSuccess: () =>
-                                            setConfirmingDokterDeletion(false),
-                                    }
-                                );
-                            }}
-                        >
-                            Hapus Data
-                        </DangerButton>
+                            <DangerButton
+                                className="ml-3"
+                                processing={processing}
+                                onClick={() => {
+                                    useFormInertia.delete(
+                                        route("dokter.delete", dokter.id),
+                                        {
+                                            preserveScroll: true,
+                                            onSuccess: () =>
+                                                setConfirmingDeletion(false),
+                                        }
+                                    );
+                                }}
+                            >
+                                Hapus Data
+                            </DangerButton>
+                        </div>
                     </div>
-                </div>
-            </Modal>
+                </Modal>
+            )}
         </AuthenticatedLayout>
     );
 }

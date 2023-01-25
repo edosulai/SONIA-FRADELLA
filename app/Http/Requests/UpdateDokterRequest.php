@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Spesialis;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateDokterRequest extends FormRequest
@@ -24,7 +25,9 @@ class UpdateDokterRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'nama_dokter' => ['required', 'string'],
+            'no_identitas' => ['required', 'integer'],
+            'spesialis_id' => ['required', 'integer', 'exists:' . Spesialis::class . ',id'],
         ];
     }
 }

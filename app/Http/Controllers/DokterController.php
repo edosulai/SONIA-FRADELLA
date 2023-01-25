@@ -96,7 +96,15 @@ class DokterController extends Controller
      */
     public function update(UpdateDokterRequest $request, Dokter $dokter)
     {
-        //
+        $dokter = $dokter->find($request->id);
+        if (is_null($dokter)) return abort(400);
+
+        $dokter->nama_dokter = $request->nama_dokter;
+        $dokter->no_identitas = $request->no_identitas;
+        $dokter->spesialis_id = $request->spesialis_id;
+        $dokter->save();
+
+        return redirect()->route('dokter')->with('status', 'Data Dokter ' . $request->nama_dokter . ' Berhasil di Ubah');
     }
 
     /**

@@ -16,7 +16,7 @@ class PasienController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Pasien');
+        return Inertia::render('Pasien/Dashboard');
     }
 
     /**
