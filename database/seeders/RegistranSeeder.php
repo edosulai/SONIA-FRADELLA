@@ -15,6 +15,6 @@ class RegistranSeeder extends Seeder
      */
     public function run()
     {
-        Registran::factory(600)->create();
+        Registran::factory(100)->create();
     }
 }

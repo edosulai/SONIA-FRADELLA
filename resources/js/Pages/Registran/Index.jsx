@@ -1,7 +1,7 @@
-import Table from "@/Components/Table";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import ReactDOMServer from "react-dom/server";
+import Table from "@/Components/Table";
 
 export default function Index({ data, auth, status }) {
     const celltoLink = function (data, td, rowIndex, cellIndex) {
@@ -17,7 +17,7 @@ export default function Index({ data, auth, status }) {
     };
 
     const columnSetting = [
-        { from: "no", to: "No", select: 0, sort: "asc", render: celltoLink },
+        { from: "No", to: "No", select: 0, sort: "asc", render: celltoLink },
         {
             from: "nama_pasien",
             to: "Nama Pasien",
@@ -57,11 +57,7 @@ export default function Index({ data, auth, status }) {
         { from: "id", to: "id", select: 7, hidden: true },
     ];
 
-    const dataWithIndex = _.map(data, (item, index) =>
-        _.extend({}, item, { no: index + 1 })
-    );
-
-    const filteredData = _.map(dataWithIndex, (obj) =>
+    const filteredData = _.map(data, (obj) =>
         _.pick(obj, _.map(columnSetting, "from"))
     );
 
@@ -76,7 +72,11 @@ export default function Index({ data, auth, status }) {
         )
     );
 
-    const newData = _.map(fromTo, function (obj) {
+    const dataWithIndex = _.map(fromTo, (item, index) =>
+        _.extend({}, item, { No: index + 1 })
+    );
+
+    const newData = _.map(dataWithIndex, function (obj) {
         return _.mapValues(obj, function (value, key) {
             if (key === "id") {
                 return;

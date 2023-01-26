@@ -1,14 +1,201 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
+import ReactDOMServer from "react-dom/server";
+import {
+    UserCircleIcon,
+    PlusCircleIcon,
+    HomeIcon,
+    XMarkIcon,
+} from "@heroicons/react/24/outline";
+import Table from "@/Components/Table";
+import React from "react";
+import { forElse } from "@/Utils/Helpers";
 
-export default function Dashboard({ auth }) {
+export default function Dashboard({
+    auth,
+    data,
+    status,
+    unit,
+    total_pasien,
+    total_dokter,
+    total_registran,
+}) {
+    const celltoLink = (data, td, rowIndex, cellIndex) =>
+        ReactDOMServer.renderToString(
+            <Link
+                className="flex items-center cursor-pointer px-4 py-2"
+                href={route("dashboard.edit", data[1])}
+                tabIndex="-1"
+            >
+                {data[0]}
+            </Link>
+        );
+
+    const columnSetting = [
+        { from: "id", to: "id", select: 0, hidden: true },
+        { from: "No", to: "No", select: 1, render: celltoLink },
+        {
+            from: "created_at",
+            to: "Tanggal",
+            select: 2,
+            sort: "asc",
+            render: (data, td, rowIndex, cellIndex) =>
+                ReactDOMServer.renderToString(
+                    <Link
+                        className="flex items-center cursor-pointer px-4 py-2"
+                        href={route("dashboard.edit", data[1])}
+                        tabIndex="-1"
+                    >
+                        {new Date(data[0]).toLocaleDateString("id-ID", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                        })}
+                    </Link>
+                ),
+        },
+        {
+            from: "nama_pasien",
+            to: "Nama Pasien",
+            select: 3,
+            render: celltoLink,
+        },
+        {
+            from: "nama_kepala_keluarga",
+            to: "Nama KK",
+            select: 4,
+            render: celltoLink,
+        },
+        {
+            from: "no_kartu",
+            to: "No Kartu",
+            select: 5,
+            render: celltoLink,
+        },
+        {
+            from: "umur",
+            to: "Umur",
+            select: 6,
+            render: celltoLink,
+        },
+        {
+            from: "jenis_kelamin",
+            to: "Jenis Kelamin",
+            select: 7,
+            render: celltoLink,
+        },
+        {
+            from: "status",
+            to: "Status",
+            select: 8,
+            render: celltoLink,
+        },
+        ...unit.map((u, index) => ({
+            from: "jenis_unit",
+            to: u.jenis_unit,
+            select: 9 + parseInt(index),
+            render: (data, td, rowIndex, cellIndex) => {
+                return ReactDOMServer.renderToString(
+                    <Link
+                        className="flex items-center cursor-pointer px-4 py-2"
+                        href={route("dashboard.edit", data[1])}
+                        tabIndex="-1"
+                    >
+                        {(unit[cellIndex - 9] &&
+                            data[0] == unit[cellIndex - 9].jenis_unit &&
+                            "✓") || (
+                            <XMarkIcon className="w-6 h-6 text-red-500" />
+                        )}
+                    </Link>
+                );
+            },
+        })),
+    ];
+
+    const filteredData = _.map(data, (obj) =>
+        _.pick(obj, _.map(columnSetting, "from"))
+    );
+
+    const fromTo = _.map(filteredData, (obj) =>
+        _.reduce(
+            columnSetting,
+            (result, m) => {
+                result[m.to] = obj[m.from];
+                return result;
+            },
+            {}
+        )
+    );
+
+    const mergedData = fromTo.reduce((acc, curr) => {
+        // mencari objek dengan "Tanggal" dan "No Kartu" yang sama
+        let found = acc.find(
+            (obj) =>
+                obj["Tanggal"] === curr["Tanggal"] &&
+                obj["No Kartu"] === curr["No Kartu"]
+        );
+        if (found) {
+            // jika ditemukan, menggabungkan objek yang ditemukan dengan objek saat ini
+            // menggunakan metode assign untuk menyalin properti dari objek saat ini ke objek yang ditemukan
+            // mengecualikan properti "Umum","Balita","Lansia" yang memiliki nama dan nilai yang sama
+            Object.keys(curr).forEach((key) => {
+                forElse(
+                    unit,
+                    (u, i, breakIt) => {
+                        if (u.jenis_unit == key) {
+                            if (found[key] == key) {
+                                found[key] = found[key];
+                            } else if (curr[key] == key) {
+                                found[key] = curr[key];
+                            } else {
+                                found[key] = found[key];
+                            }
+
+                            return breakIt;
+                        }
+                    },
+                    () => {
+                        found[key] = curr[key];
+                    }
+                );
+            });
+        } else {
+            // jika tidak ditemukan, menambahkan objek saat ini ke hasil akhir
+            acc.push(curr);
+        }
+        return acc;
+    }, []);
+
+    const dataWithIndex = _.map(mergedData, (item, index) =>
+        _.extend({}, item, { No: index + 1 })
+    );
+
+    const newData = _.map(dataWithIndex, function (obj) {
+        return _.mapValues(obj, function (value, key) {
+            if (key === "id") {
+                return;
+            }
+            return [value, obj.id];
+        });
+    });
+
     return (
         <AuthenticatedLayout
             auth={auth}
             header={
-                <h2 className="font-semibold text-xl text-gray-800  leading-tight">
-                    Dashboard
-                </h2>
+                <div className="flex">
+                    <h2 className="font-semibold text-xl text-gray-800  leading-tight">
+                        Dashboard
+                    </h2>
+                    <div className="space-x-4 -my-px ml-10 flex">
+                        <Link
+                            href={route("dashboard.new")}
+                            className="rounded block px-4 py-2 text-sm leading-5 text-light-700 hover:bg-light-100 focus:outline-none focus:bg-light-10 transition duration-150 ease-in-out"
+                        >
+                            Tambah Kunjungan
+                        </Link>
+                    </div>
+                </div>
             }
         >
             <Head title="Dashboard" />
@@ -18,87 +205,64 @@ export default function Dashboard({ auth }) {
                     <div className="bg-white  overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900 ">
                             <div className="flex gap-16">
-                                <div class="pl-1 w-96 h-20 bg-blue-400 rounded-lg shadow-md">
-                                    <div class="flex w-full h-full py-2 px-4 bg-white rounded-lg justify-between">
-                                        <div class="my-auto">
-                                            <p class="font-bold">
+                                <div className="pl-1 w-96 h-20 bg-blue-400 rounded-lg shadow-md">
+                                    <div className="flex w-full h-full py-2 px-4 bg-white rounded-lg justify-between">
+                                        <div className="my-auto">
+                                            <p className="font-bold">
                                                 TOTAL PASIEN
                                             </p>
-                                            <p class="text-lg">$40,000</p>
+                                            <p className="text-lg">
+                                                {total_registran} Pasien
+                                            </p>
                                         </div>
-                                        <div class="my-auto">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth={1.5}
-                                                stroke="currentColor"
-                                                className="w-6 h-6"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-                                                />
-                                            </svg>
+                                        <div className="my-auto">
+                                            <UserCircleIcon className="w-6 h-6" />
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="pl-1 w-96 h-20 bg-green-400 rounded-lg shadow-md">
-                                    <div class="flex w-full h-full py-2 px-4 bg-white rounded-lg justify-between">
-                                        <div class="my-auto">
-                                            <p class="font-bold">
+                                <div className="pl-1 w-96 h-20 bg-green-400 rounded-lg shadow-md">
+                                    <div className="flex w-full h-full py-2 px-4 bg-white rounded-lg justify-between">
+                                        <div className="my-auto">
+                                            <p className="font-bold">
                                                 JUMLAH DOKTER
                                             </p>
-                                            <p class="text-lg">$40,000</p>
+                                            <p className="text-lg">
+                                                {total_dokter} Dokter
+                                            </p>
                                         </div>
-                                        <div class="my-auto">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth={1.5}
-                                                stroke="currentColor"
-                                                className="w-6 h-6"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                                                />
-                                            </svg>
+                                        <div className="my-auto">
+                                            <PlusCircleIcon className="w-6 h-6" />
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="pl-1 w-96 h-20 bg-yellow-400 rounded-lg shadow-md">
-                                    <div class="flex w-full h-full py-2 px-4 bg-white rounded-lg justify-between">
-                                        <div class="my-auto">
-                                            <p class="font-bold">
+                                <div className="pl-1 w-96 h-20 bg-yellow-400 rounded-lg shadow-md">
+                                    <div className="flex w-full h-full py-2 px-4 bg-white rounded-lg justify-between">
+                                        <div className="my-auto">
+                                            <p className="font-bold">
                                                 TOTAL KUNJUNGAN (BULANAN)
                                             </p>
-                                            <p class="text-lg">$40,000</p>
+                                            <p className="text-lg">
+                                                {total_pasien} Orang
+                                            </p>
                                         </div>
-                                        <div class="my-auto">
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth={1.5}
-                                                stroke="currentColor"
-                                                className="w-6 h-6"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-                                                />
-                                            </svg>
+                                        <div className="my-auto">
+                                            <HomeIcon className="w-6 h-6" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div className="p-6 text-gray-900 ">
+                            {status && (
+                                <div className="mb-4 font-medium text-sm text-green-600">
+                                    {status}
+                                </div>
+                            )}
+
+                            <Table data={newData} columns={columnSetting} />
                         </div>
                     </div>
                 </div>
