@@ -8,7 +8,9 @@ use App\Http\Requests\UpdatePasienRequest;
 use App\Models\Dokter;
 use App\Models\Registran;
 use App\Models\Unit;
-use Illuminate\Support\Facades\DB;
+use App\Models\UnitPasien;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class PasienController extends Controller
@@ -57,7 +59,12 @@ class PasienController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Pasien/Form', [
+            'title' => 'Tambah Kunjugan',
+            'registrans' => Registran::selectRaw('registrans.id, registrans.no_kartu')->get(),
+            'units' => Unit::selectRaw('units.id, units.jenis_unit')->get(),
+            'status' => session('status'),
+        ]);
     }
 
     /**
@@ -68,7 +75,24 @@ class PasienController extends Controller
      */
     public function store(StorePasienRequest $request)
     {
-        //
+        $registran = Registran::where('no_kartu', $request->no_kartu)->first();
+
+        $pasien = Pasien::create([
+            'registran_id' => $registran->id
+        ]);
+
+        $unitPasien = [];
+        foreach ($request->jenis_unit as $key => $value) {
+            $unitPasien[] = [
+                'pasien_id' => $pasien->id,
+                'unit_id' => Unit::where('jenis_unit', $value)->first()->id,
+                'created_at' => $pasien->created_at,
+                'updated_at' => $pasien->updated_at
+            ];
+        }
+        UnitPasien::insert($unitPasien);
+
+        return redirect('dashboard');
     }
 
     /**
@@ -88,9 +112,24 @@ class PasienController extends Controller
      * @param  \App\Models\Pasien  $pasien
      * @return \Illuminate\Http\Response
      */
-    public function edit(Pasien $pasien)
+    public function edit(Request $request, Pasien $pasien)
     {
-        //
+        $pasien = $pasien->find($request->id);
+        if (is_null($pasien)) return abort(404);
+
+        return Inertia::render('Pasien/Form', [
+            'title' => 'Edit Registran',
+            'status' => session('status'),
+            'pasien' => [
+                'id' => $pasien->id,
+                'no_kartu' => Registran::find($pasien->registran_id)->no_kartu,
+                'jenis_unit' => UnitPasien::where('pasien_id', $pasien->id)->get()->map(function ($unit) {
+                    return Unit::find($unit->unit_id)->jenis_unit;
+                }),
+            ],
+            'registrans' => Registran::selectRaw('registrans.id, registrans.no_kartu')->get(),
+            'units' => Unit::selectRaw('units.id, units.jenis_unit')->get(),
+        ]);
     }
 
     /**
@@ -102,7 +141,31 @@ class PasienController extends Controller
      */
     public function update(UpdatePasienRequest $request, Pasien $pasien)
     {
-        //
+        $pasien = $pasien->find($request->id);
+        if (is_null($pasien)) return abort(400);
+
+        $registran = Registran::where('no_kartu', $request->no_kartu)->first();
+
+        $pasien->registran_id = $registran->id;
+        $pasien->save();
+
+        $unitPasien = UnitPasien::where('pasien_id', $pasien->id)->get();
+        foreach ($unitPasien as $key => $value) {
+            $value->delete();
+        }
+
+        $unitPasien = [];
+        foreach ($request->jenis_unit as $key => $value) {
+            $unitPasien[] = [
+                'pasien_id' => $pasien->id,
+                'unit_id' => Unit::where('jenis_unit', $value)->first()->id,
+                'created_at' => $pasien->created_at,
+                'updated_at' => $pasien->updated_at
+            ];
+        }
+        UnitPasien::insert($unitPasien);
+
+        return redirect()->route('dashboard')->with('status', 'Data Kunjugan ' . $request->no_kartu . ' Berhasil di Ubah');
     }
 
     /**
@@ -111,8 +174,27 @@ class PasienController extends Controller
      * @param  \App\Models\Pasien  $pasien
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pasien $pasien)
+    public function destroy(Request $request, Pasien $pasien)
     {
-        //
+        $validator = Validator::make(['id' => $request->id], [
+            'id' => ['required', 'integer', 'exists:' . Pasien::class . ',id'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect("dokter")
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $pasien = $pasien->find($request->id);
+
+        $unitPasien = UnitPasien::where('pasien_id', $pasien->id)->get();
+        foreach ($unitPasien as $key => $value) {
+            $value->delete();
+        }
+
+        $pasien->delete();
+
+        return redirect()->route('dashboard')->with('status', 'Data Kunjungan ' . $request->no_kartu . ' Berhasil di Hapus');
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Registran;
+use App\Models\Unit;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePasienRequest extends FormRequest
@@ -13,7 +15,7 @@ class StorePasienRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +26,8 @@ class StorePasienRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'no_kartu' => ['required', 'integer', 'exists:' . Registran::class . ',no_kartu'],
+            'jenis_unit' => ['required', 'array', 'exists:' . Unit::class . ',jenis_unit'],
         ];
     }
 }

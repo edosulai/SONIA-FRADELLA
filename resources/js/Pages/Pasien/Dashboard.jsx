@@ -141,7 +141,7 @@ export default function Dashboard({
             Object.keys(curr).forEach((key) => {
                 forElse(
                     unit,
-                    (u, i, breakIt) => {
+                    (u, i, breakLoop) => {
                         if (u.jenis_unit == key) {
                             if (found[key] == key) {
                                 found[key] = found[key];
@@ -151,7 +151,7 @@ export default function Dashboard({
                                 found[key] = found[key];
                             }
 
-                            return breakIt;
+                            return breakLoop();
                         }
                     },
                     () => {
