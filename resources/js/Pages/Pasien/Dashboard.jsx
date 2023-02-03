@@ -33,12 +33,11 @@ export default function Dashboard({
 
     const columnSetting = [
         { from: "id", to: "id", select: 0, hidden: true },
-        { from: "No", to: "No", select: 1, render: celltoLink },
+        { from: "No", to: "No", select: 1, sort: "asc", render: celltoLink },
         {
             from: "created_at",
             to: "Tanggal",
             select: 2,
-            sort: "asc",
             render: (data, td, rowIndex, cellIndex) =>
                 ReactDOMServer.renderToString(
                     <Link
@@ -167,7 +166,12 @@ export default function Dashboard({
     }, []);
 
     const dataWithIndex = _.map(mergedData, (item, index) =>
-        _.extend({}, item, { No: index + 1 })
+        _.extend({}, item, {
+            No: String(index + 1).padStart(
+                mergedData.length.toString().length,
+                "0"
+            ),
+        })
     );
 
     const newData = _.map(dataWithIndex, function (obj) {

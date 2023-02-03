@@ -73,7 +73,12 @@ export default function Index({ data, auth, status }) {
     );
 
     const dataWithIndex = _.map(fromTo, (item, index) =>
-        _.extend({}, item, { No: index + 1 })
+        _.extend({}, item, {
+            No: String(index + 1).padStart(
+                fromTo.length.toString().length,
+                "0"
+            ),
+        })
     );
 
     const newData = _.map(dataWithIndex, function (obj) {
