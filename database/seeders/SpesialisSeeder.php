@@ -19,11 +19,13 @@ class SpesialisSeeder extends Seeder
             [
                 'nama_spesialis' => "Umum"
             ], [
-                'nama_spesialis' => "Cardiologist"
+                'nama_spesialis' => "Gigi"
             ], [
-                'nama_spesialis' => "Pediatrician"
+                'nama_spesialis' => "Anak"
             ], [
-                'nama_spesialis' => "Neurologist"
+                'nama_spesialis' => "Kebidanan dan Kandungan"
+            ], [
+                'nama_spesialis' => "THT"
             ],
         ]);
     }

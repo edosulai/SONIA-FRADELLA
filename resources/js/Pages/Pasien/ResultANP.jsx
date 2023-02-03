@@ -1,25 +1,12 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
-import ReactDOMServer from "react-dom/server";
-import {
-    UserCircleIcon,
-    PlusCircleIcon,
-    HomeIcon,
-    XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import Table from "@/Components/Table";
 import React from "react";
+import ReactDOMServer from "react-dom/server";
 import { forElse } from "@/Utils/Helpers";
 
-export default function Dashboard({
-    auth,
-    data,
-    status,
-    unit,
-    total_pasien,
-    total_dokter,
-    total_registran,
-}) {
+export default function ResultANP({ auth, data, status, unit }) {
     const celltoLink = (data, td, rowIndex, cellIndex) =>
         ReactDOMServer.renderToString(
             <Link
@@ -185,7 +172,7 @@ export default function Dashboard({
             header={
                 <div className="flex">
                     <h2 className="font-semibold text-xl text-gray-800  leading-tight">
-                        Dashboard
+                        Hasil Sorting ANP
                     </h2>
                     <div className="space-x-4 -my-px ml-10 flex">
                         <Link
@@ -204,63 +191,11 @@ export default function Dashboard({
                 </div>
             }
         >
-            <Head title="Dashboard" />
+            <Head title="Hasil Sorting ANP" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white  overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900 ">
-                            <div className="flex gap-16">
-                                <div className="pl-1 w-96 h-20 bg-blue-400 rounded-lg shadow-md">
-                                    <div className="flex w-full h-full py-2 px-4 bg-white rounded-lg justify-between">
-                                        <div className="my-auto">
-                                            <p className="font-bold">
-                                                TOTAL PASIEN
-                                            </p>
-                                            <p className="text-lg">
-                                                {total_registran} Pasien
-                                            </p>
-                                        </div>
-                                        <div className="my-auto">
-                                            <UserCircleIcon className="w-6 h-6" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="pl-1 w-96 h-20 bg-green-400 rounded-lg shadow-md">
-                                    <div className="flex w-full h-full py-2 px-4 bg-white rounded-lg justify-between">
-                                        <div className="my-auto">
-                                            <p className="font-bold">
-                                                JUMLAH DOKTER
-                                            </p>
-                                            <p className="text-lg">
-                                                {total_dokter} Dokter
-                                            </p>
-                                        </div>
-                                        <div className="my-auto">
-                                            <PlusCircleIcon className="w-6 h-6" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="pl-1 w-96 h-20 bg-yellow-400 rounded-lg shadow-md">
-                                    <div className="flex w-full h-full py-2 px-4 bg-white rounded-lg justify-between">
-                                        <div className="my-auto">
-                                            <p className="font-bold">
-                                                TOTAL KUNJUNGAN (BULANAN)
-                                            </p>
-                                            <p className="text-lg">
-                                                {total_pasien} Orang
-                                            </p>
-                                        </div>
-                                        <div className="my-auto">
-                                            <HomeIcon className="w-6 h-6" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div className="p-6 text-gray-900">
                             {status && (
                                 <div className="mb-4 font-medium text-sm text-green-600">

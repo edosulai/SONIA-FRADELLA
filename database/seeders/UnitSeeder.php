@@ -18,11 +18,15 @@ class UnitSeeder extends Seeder
     {
         DB::table('units')->insert([
             [
-                'jenis_unit' => "Umum"
+                'jenis_unit' => "Poliklinik Umum"
             ], [
-                'jenis_unit' => "Balita"
+                'jenis_unit' => "Poliklinik Gigi Mulut"
             ], [
-                'jenis_unit' => "Lansia"
+                'jenis_unit' => "KIA/KB"
+            ], [
+                'jenis_unit' => "MTBS"
+            ], [
+                'jenis_unit' => "Imunisasi"
             ],
         ]);
     }

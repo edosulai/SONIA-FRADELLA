@@ -40,9 +40,7 @@ class PasienController extends Controller
                 ->join('registrans', 'pasiens.registran_id', '=', 'registrans.id')
                 ->join('unit_pasiens', 'pasiens.id', '=', 'unit_pasiens.pasien_id')
                 ->join('units', 'unit_pasiens.unit_id', '=', 'units.id')
-                // ->orderBy('registrans.nama_pasien')
                 ->orderBy('pasiens.created_at', 'desc')
-                // ->limit(10)
                 ->get(),
             'unit' => Unit::all(),
             'total_pasien' => Pasien::count(),

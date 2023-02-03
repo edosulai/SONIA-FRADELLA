@@ -1,10 +1,15 @@
 <?php
 
+use App\ANP;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegistranController;
+use App\MinMaxScaler;
+use App\Models\Pasien;
+use App\Models\Unit;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -34,6 +39,117 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [PasienController::class, 'index'])->name('dashboard');
         Route::get('/dashboard/new', [PasienController::class, 'create'])->name('dashboard.new');
         Route::post('/dashboard/new', [PasienController::class, 'store'])->name('dashboard.new');
+        Route::get('/dashboard/anp', function (Request $request) {
+            $queryPasien  = Pasien::selectRaw("registrans.no_kartu, max(registrans.umur) as umur, concat('unit', units.id) as unit_ke, count(units.jenis_unit) as banyak_jenis_unit")
+                ->join('registrans', 'pasiens.registran_id', '=', 'registrans.id')
+                ->join('unit_pasiens', 'pasiens.id', '=', 'unit_pasiens.pasien_id')
+                ->join('units', 'unit_pasiens.unit_id', '=', 'units.id')
+                ->groupBy('registrans.no_kartu', 'units.jenis_unit', 'units.id')
+                ->orderBy('registrans.no_kartu')
+                ->get()->toArray();
+
+            $datas = [
+                "unit1" => 94,
+                "unit2" => 93,
+                "unit3" => 58,
+                "unit4" => 50,
+                "unit5" => 30,
+                "umur" => 26
+            ];
+
+            $result = [];
+            $units = Unit::selectRaw("concat('unit', units.id) as unit_ke")
+                ->get()->map(function ($unit) {
+                    return $unit["unit_ke"];
+                })->toArray();
+
+            foreach ($queryPasien as $qr) {
+                $key = array_search($qr['no_kartu'], array_column($result, 'no_kartu'));
+                if ($key === false) {
+                    $data = [
+                        "no_kartu" => $qr['no_kartu'],
+                        "umur" => $qr['umur'],
+                    ];
+                    foreach ($units as $unit) {
+                        $data[$unit] = 0;
+                    }
+                    $data[$qr['unit_ke']] = $qr['banyak_jenis_unit'];
+                    $result[] = $data;
+                } else {
+                    $result[$key][$qr['unit_ke']] = $qr['banyak_jenis_unit'];
+                }
+            }
+
+            $newResult = [];
+            foreach ($result as $item) {
+                $no_kartu = $item["no_kartu"];
+                unset($item["no_kartu"]);
+                $newResult[$no_kartu] = $item;
+            }
+
+            $scalerDataset = new MinMaxScaler();
+            $scalerDataset->fit($newResult);
+            $scalerDatasetScalled = $scalerDataset->transform($newResult);
+
+            $scalerInput = new MinMaxScaler();
+            $scalerInput->fit($datas);
+            $scalerInputScalled = $scalerInput->transform($datas);
+
+            $anp = new ANP(collect($result)->map(function ($each) {
+                return $each["no_kartu"];
+            })->toArray(), collect($datas)->keys()->toArray(), $scalerInputScalled, $scalerDatasetScalled);
+
+            $anpResult = $anp->getPriorityPatients();
+
+            $gruopedPasien  = Pasien::selectRaw("
+                    registrans.nama_pasien,
+                    registrans.nama_kepala_keluarga,
+                    registrans.no_kartu,
+                    registrans.umur,
+                    registrans.jenis_kelamin,
+                    registrans.status
+                ")
+                ->join('registrans', 'pasiens.registran_id', '=', 'registrans.id')
+                ->groupBy("registrans.nama_pasien", "registrans.nama_kepala_keluarga", "registrans.no_kartu", "registrans.umur", "registrans.jenis_kelamin", "registrans.status")
+                ->orderBy('registrans.no_kartu')
+                ->get()->toArray();
+
+            $endResult = [];
+            foreach ($gruopedPasien as $key2 => $value2) {
+                foreach ($anpResult as $key1 => $value1) {
+                    if ($value1["patient"] === $value2["no_kartu"]) {
+                        $endResult[] = array_merge($value2, ["priority" => $value1["priority"]]);
+                    }
+                }
+            }
+
+            return Inertia::render('Pasien/ResultANP', [
+                'title' => 'Hasil Sorting ANP',
+                'anp' => $endResult
+            ]);
+
+            // return Inertia::render('Pasien/FormANP', [
+            //     'title' => 'Form Sorting ANP',
+            //     'unit' => Pasien::selectRaw('units.id, units.jenis_unit, count(units.jenis_unit) as banyak_jenis_unit')
+            //         ->join('registrans', 'pasiens.registran_id', '=', 'registrans.id')
+            //         ->join('unit_pasiens', 'pasiens.id', '=', 'unit_pasiens.pasien_id')
+            //         ->join('units', 'unit_pasiens.unit_id', '=', 'units.id')
+            //         ->groupBy('units.id', 'units.jenis_unit')
+            //         ->get(),
+            //     'ageRange' => Pasien::selectRaw('max(registrans.umur) as max_umur, min(registrans.umur) as min_umur')
+            //         ->join('registrans', 'pasiens.registran_id', '=', 'registrans.id')
+            //         ->join('unit_pasiens', 'pasiens.id', '=', 'unit_pasiens.pasien_id')
+            //         ->join('units', 'unit_pasiens.unit_id', '=', 'units.id')
+            //         ->first()
+            // ]);
+        })->name('dashboard.anp');
+        Route::post('/dashboard/anp', function (Request $request) {
+            dd($request->all());
+
+            return Inertia::render('Pasien/ResultANP', [
+                'title' => 'Hasil Sorting ANP'
+            ]);
+        })->name('dashboard.anp');
         Route::get('/dashboard/{id}', [PasienController::class, 'edit'])->name('dashboard.edit');
         Route::patch('/dashboard/{id}', [PasienController::class, 'update'])->name('dashboard.edit');
         Route::delete('/dashboard/{id}', [PasienController::class, 'destroy'])->name('dashboard.delete');
@@ -58,4 +174,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
