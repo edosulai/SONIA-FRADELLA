@@ -40,6 +40,22 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/new', [PasienController::class, 'create'])->name('dashboard.new');
         Route::post('/dashboard/new', [PasienController::class, 'store'])->name('dashboard.new');
         Route::get('/dashboard/anp', function (Request $request) {
+            return Inertia::render('Pasien/FormANP', [
+                'title' => 'Form Sorting ANP',
+                'unit' => Pasien::selectRaw('units.id, units.jenis_unit, count(units.jenis_unit) as banyak_jenis_unit')
+                    ->join('registrans', 'pasiens.registran_id', '=', 'registrans.id')
+                    ->join('unit_pasiens', 'pasiens.id', '=', 'unit_pasiens.pasien_id')
+                    ->join('units', 'unit_pasiens.unit_id', '=', 'units.id')
+                    ->groupBy('units.id', 'units.jenis_unit')
+                    ->get(),
+                'ageRange' => Pasien::selectRaw('max(registrans.umur) as max_umur, min(registrans.umur) as min_umur')
+                    ->join('registrans', 'pasiens.registran_id', '=', 'registrans.id')
+                    ->join('unit_pasiens', 'pasiens.id', '=', 'unit_pasiens.pasien_id')
+                    ->join('units', 'unit_pasiens.unit_id', '=', 'units.id')
+                    ->first()
+            ]);
+        })->name('dashboard.anp');
+        Route::post('/dashboard/anp', function (Request $request) {
             $queryPasien  = Pasien::selectRaw("registrans.no_kartu, max(registrans.umur) as umur, concat('unit', units.id) as unit_ke, count(units.jenis_unit) as banyak_jenis_unit")
                 ->join('registrans', 'pasiens.registran_id', '=', 'registrans.id')
                 ->join('unit_pasiens', 'pasiens.id', '=', 'unit_pasiens.pasien_id')
@@ -48,14 +64,7 @@ Route::middleware('auth')->group(function () {
                 ->orderBy('registrans.no_kartu')
                 ->get()->toArray();
 
-            $datas = [
-                "unit1" => 94,
-                "unit2" => 93,
-                "unit3" => 58,
-                "unit4" => 50,
-                "unit5" => 30,
-                "umur" => 26
-            ];
+            $datas = $request->all();
 
             $result = [];
             $units = Unit::selectRaw("concat('unit', units.id) as unit_ke")
@@ -126,28 +135,6 @@ Route::middleware('auth')->group(function () {
             return Inertia::render('Pasien/ResultANP', [
                 'title' => 'Hasil Sorting ANP',
                 'anp' => $endResult
-            ]);
-
-            // return Inertia::render('Pasien/FormANP', [
-            //     'title' => 'Form Sorting ANP',
-            //     'unit' => Pasien::selectRaw('units.id, units.jenis_unit, count(units.jenis_unit) as banyak_jenis_unit')
-            //         ->join('registrans', 'pasiens.registran_id', '=', 'registrans.id')
-            //         ->join('unit_pasiens', 'pasiens.id', '=', 'unit_pasiens.pasien_id')
-            //         ->join('units', 'unit_pasiens.unit_id', '=', 'units.id')
-            //         ->groupBy('units.id', 'units.jenis_unit')
-            //         ->get(),
-            //     'ageRange' => Pasien::selectRaw('max(registrans.umur) as max_umur, min(registrans.umur) as min_umur')
-            //         ->join('registrans', 'pasiens.registran_id', '=', 'registrans.id')
-            //         ->join('unit_pasiens', 'pasiens.id', '=', 'unit_pasiens.pasien_id')
-            //         ->join('units', 'unit_pasiens.unit_id', '=', 'units.id')
-            //         ->first()
-            // ]);
-        })->name('dashboard.anp');
-        Route::post('/dashboard/anp', function (Request $request) {
-            dd($request->all());
-
-            return Inertia::render('Pasien/ResultANP', [
-                'title' => 'Hasil Sorting ANP'
             ]);
         })->name('dashboard.anp');
         Route::get('/dashboard/{id}', [PasienController::class, 'edit'])->name('dashboard.edit');

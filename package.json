@@ -21,6 +21,8 @@
         "vite": "^4.0.0"
     },
     "dependencies": {
-        "@heroicons/react": "^2.0.13"
+        "@heroicons/react": "^2.0.13",
+        "jspdf": "^2.5.1",
+        "jspdf-autotable": "^3.5.28"
     }
 }
