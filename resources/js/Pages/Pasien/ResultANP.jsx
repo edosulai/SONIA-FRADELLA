@@ -56,7 +56,15 @@ export default function ResultANP({ auth, anp, status }) {
         },
     ];
 
-    const fromTo = _.map(_.sortBy(anp, "priority").reverse(), (obj) =>
+    const data = _.sortBy(anp, "priority").reverse();
+
+    const dataWithIndex = _.map(data, (item, index) =>
+        _.extend({}, item, {
+            No: String(index + 1).padStart(data.length.toString().length, "0"),
+        })
+    );
+
+    const fromTo = _.map(dataWithIndex, (obj) =>
         _.reduce(
             columnSetting,
             (result, m) => {
@@ -65,10 +73,6 @@ export default function ResultANP({ auth, anp, status }) {
             },
             {}
         )
-    );
-
-    const dataWithIndex = _.map(fromTo, (item, index) =>
-        _.extend({}, item, { No: index + 1 })
     );
 
     return (
@@ -110,7 +114,7 @@ export default function ResultANP({ auth, anp, status }) {
 
                             <div className="overflow-x-auto">
                                 <Table
-                                    data={dataWithIndex}
+                                    data={fromTo}
                                     columns={columnSetting}
                                     print={{
                                         head: "Hasil Sorting Pasien Sesuai Nilai Prioritas",
