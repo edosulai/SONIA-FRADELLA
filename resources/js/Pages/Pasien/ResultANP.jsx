@@ -3,6 +3,7 @@ import ReactDOMServer from "react-dom/server";
 import { Head, Link } from "@inertiajs/react";
 import Table from "@/Components/Table";
 import React from "react";
+import CetakTable from "@/Components/CetakTable";
 
 export default function ResultANP({ auth, anp, status }) {
     const celltoLink = (data, td, rowIndex, cellIndex) =>
@@ -116,9 +117,15 @@ export default function ResultANP({ auth, anp, status }) {
                                 <Table
                                     data={fromTo}
                                     columns={columnSetting}
-                                    print={{
-                                        head: "Hasil Sorting Pasien Sesuai Nilai Prioritas",
-                                    }}
+                                    tops={[
+                                        {
+                                            element: CetakTable,
+                                            context: {
+                                                nama: "Laporan Hasil Sorting Pasien Sesuai Nilai Prioritas",
+                                                tombol: "Cetak Laporan Prioritas",
+                                            },
+                                        },
+                                    ]}
                                 />
                             </div>
                         </div>

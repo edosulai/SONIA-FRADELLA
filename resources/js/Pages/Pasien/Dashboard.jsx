@@ -1,5 +1,7 @@
+import moment from "moment";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
+import React, { useEffect, createContext } from "react";
 import ReactDOMServer from "react-dom/server";
 import {
     UserCircleIcon,
@@ -8,12 +10,13 @@ import {
     XMarkIcon,
 } from "@heroicons/react/24/outline";
 import Table from "@/Components/Table";
-import React from "react";
 import { forElse } from "@/Utils/Helpers";
+import CetakTable from "@/Components/CetakTable";
+import DateRange from "@/Components/DateRange";
 
 export default function Dashboard({
     auth,
-    data,
+    pasien,
     status,
     unit,
     total_pasien,
@@ -111,7 +114,7 @@ export default function Dashboard({
         })),
     ];
 
-    const filteredData = _.map(data, (obj) =>
+    const filteredData = _.map(pasien, (obj) =>
         _.pick(obj, _.map(columnSetting, "from"))
     );
 
@@ -273,7 +276,53 @@ export default function Dashboard({
                             )}
 
                             <div className="overflow-x-auto">
-                                <Table data={newData} columns={columnSetting} />
+                                <Table
+                                    data={newData}
+                                    columns={columnSetting}
+                                    tops={[
+                                        {
+                                            element: CetakTable,
+                                            context: {
+                                                nama: "Laporan Kunjungan",
+                                                tombol: "Cetak Laporan",
+                                                orientation: "landscape",
+                                            },
+                                        },
+                                        {
+                                            element: DateRange,
+                                            context: {
+                                                from:
+                                                    dataWithIndex.length > 0
+                                                        ? moment
+                                                              .utc(
+                                                                  _.minBy(
+                                                                      dataWithIndex,
+                                                                      (o) =>
+                                                                          new Date(
+                                                                              o.Tanggal
+                                                                          )
+                                                                  ).Tanggal
+                                                              )
+                                                              .toDate()
+                                                        : new Date(),
+                                                to:
+                                                    dataWithIndex.length > 0
+                                                        ? moment
+                                                              .utc(
+                                                                  _.maxBy(
+                                                                      dataWithIndex,
+                                                                      (o) =>
+                                                                          new Date(
+                                                                              o.Tanggal
+                                                                          )
+                                                                  ).Tanggal
+                                                              )
+                                                              .toDate()
+                                                        : new Date(),
+                                            },
+                                        },
+                                    ]}
+                                />
                             </div>
                         </div>
                     </div>

@@ -10,6 +10,7 @@ use App\Models\Registran;
 use App\Models\Unit;
 use App\Models\UnitPasien;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
@@ -20,10 +21,13 @@ class PasienController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $from = $request->query('from') ? Carbon::parse($request->query('from'))->toDateTimeString() : null;
+        $to = $request->query('to') ? Carbon::parse($request->query('to'))->toDateTimeString() : null;
+
         return Inertia::render('Pasien/Dashboard', [
-            'data' => Pasien::selectRaw('
+            'pasien' => Pasien::selectRaw('
                 pasiens.id,
                 pasiens.registran_id,
                 pasiens.created_at,
@@ -40,6 +44,15 @@ class PasienController extends Controller
                 ->join('registrans', 'pasiens.registran_id', '=', 'registrans.id')
                 ->join('unit_pasiens', 'pasiens.id', '=', 'unit_pasiens.pasien_id')
                 ->join('units', 'unit_pasiens.unit_id', '=', 'units.id')
+                ->when($from && !$to, function ($q) use ($from) {
+                    return $q->where('pasiens.created_at', '>', $from);
+                })
+                ->when(!$from && $to, function ($q) use ($to) {
+                    return $q->where('pasiens.created_at', '<', $to);
+                })
+                ->when($from && $to, function ($q) use ($from, $to) {
+                    return $q->whereBetween('pasiens.created_at', [$from, $to]);
+                })
                 ->orderBy('pasiens.created_at', 'desc')
                 ->get(),
             'unit' => Unit::all(),
