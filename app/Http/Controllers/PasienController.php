@@ -37,11 +37,12 @@ class PasienController extends Controller
                 registrans.umur,
                 registrans.alamat,
                 registrans.jenis_kelamin,
-                registrans.status,
+                status_pasiens.status,
                 unit_pasiens.unit_id,
                 units.jenis_unit
             ')
                 ->join('registrans', 'pasiens.registran_id', '=', 'registrans.id')
+                ->join('status_pasiens', 'registrans.status_id', '=', 'status_pasiens.id')
                 ->join('unit_pasiens', 'pasiens.id', '=', 'unit_pasiens.pasien_id')
                 ->join('units', 'unit_pasiens.unit_id', '=', 'units.id')
                 ->when($from && !$to, function ($q) use ($from) {
@@ -126,7 +127,8 @@ class PasienController extends Controller
     public function edit(Request $request, Pasien $pasien)
     {
         $pasien = $pasien->find($request->id);
-        if (is_null($pasien)) return abort(404);
+        if (is_null($pasien))
+            return abort(404);
 
         return Inertia::render('Pasien/Form', [
             'title' => 'Edit Registran',
@@ -153,7 +155,8 @@ class PasienController extends Controller
     public function update(UpdatePasienRequest $request, Pasien $pasien)
     {
         $pasien = $pasien->find($request->id);
-        if (is_null($pasien)) return abort(400);
+        if (is_null($pasien))
+            return abort(400);
 
         $registran = Registran::where('no_kartu', $request->no_kartu)->first();
 

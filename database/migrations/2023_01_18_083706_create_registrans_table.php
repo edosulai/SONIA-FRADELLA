@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('umur');
             $table->text('alamat');
             $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']);
-            $table->enum('status', ['umum', 'jkm', 'bpjs']);
+            $table->foreignId('status_id')->constrained('status_pasiens')->onDelete('cascade');
             $table->timestamps();
         });
     }

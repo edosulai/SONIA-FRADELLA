@@ -135,10 +135,11 @@ Route::middleware('auth')->group(function () {
                 registrans.no_kartu,
                 registrans.umur,
                 registrans.jenis_kelamin,
-                registrans.status
+                status_pasiens.status
             ")
             ->join('registrans', 'pasiens.registran_id', '=', 'registrans.id')
-            ->groupBy("registrans.nama_pasien", "registrans.nama_kepala_keluarga", "registrans.no_kartu", "registrans.umur", "registrans.jenis_kelamin", "registrans.status")
+            ->join('status_pasiens', 'registrans.status_id', '=', 'status_pasiens.id')
+            ->groupBy("registrans.nama_pasien", "registrans.nama_kepala_keluarga", "registrans.no_kartu", "registrans.umur", "registrans.jenis_kelamin", "status_pasiens.status")
             ->orderBy('registrans.no_kartu')
             ->get()->toArray();
 

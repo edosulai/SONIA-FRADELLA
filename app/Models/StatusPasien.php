@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Spesialis extends Model
+class StatusPasien extends Model
 {
     use HasFactory;
 
@@ -16,6 +16,6 @@ class Spesialis extends Model
      */
     protected $fillable = [
         'id',
-        'nama_spesialis',
+        'status',
     ];
 }
