@@ -37,10 +37,12 @@ export default forwardRef(function RangeInput(
                 }}
                 onMouseMove={(e) => {
                     const thumbSize = 14;
+                    const thumbFromMouse = 20;
+
                     const { clientX, clientY } = e;
                     const rect = e.target.getBoundingClientRect();
-                    const x = clientX - rect.left - thumbSize / 2;
-                    const y = rect.top - clientY - 20;
+                    const x = clientX - rect.left  - thumbSize;
+                    const y = clientY - thumbFromMouse - rect.top;
 
                     setTooltip({
                         ...tooltip,

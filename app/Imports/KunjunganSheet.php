@@ -18,8 +18,8 @@ class KunjunganSheet implements ToModel, WithHeadingRow
     {
         return new Pasien([
             'registran_id' => $row["pasien_baru_id"],
-            'created_at' => $row["tanggal_kunjungan"],
-            'updated_at' => $row["tanggal_kunjungan"],
+            'created_at' => Carbon::createFromDate(1900, 1, 1)->addDays($row["tanggal_kunjungan"]),
+            'updated_at' => Carbon::createFromDate(1900, 1, 1)->addDays($row["tanggal_kunjungan"]),
         ]);
     }
 
