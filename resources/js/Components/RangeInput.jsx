@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 
 export default forwardRef(function RangeInput(
     { name, id, value, className, min, max, step, handleChange },
@@ -9,6 +9,13 @@ export default forwardRef(function RangeInput(
     useEffect(() => {
         input.current.value = value;
     }, [value]);
+
+    const [tooltip, setTooltip] = useState({
+        display: 'none',
+        top: 0,
+        left: 0,
+        value: 0,
+    });
 
     return (
         <div className="flex flex-col items-start">
@@ -25,8 +32,40 @@ export default forwardRef(function RangeInput(
                 max={max}
                 step={step}
                 value={value}
-                onChange={(e) => handleChange(e)}
+                onMouseDown={(e) => {
+                    setTooltip({ ...tooltip, display: 'block' });
+                }}
+                onMouseMove={(e) => {
+                    const thumbSize = 14;
+                    const { clientX, clientY } = e;
+                    const rect = e.target.getBoundingClientRect();
+                    const x = clientX - rect.left - thumbSize / 2;
+                    const y = rect.top - clientY - 20;
+
+                    setTooltip({
+                        ...tooltip,
+                        left: x,
+                        top: y,
+                        value: e.target.value,
+                    });
+                }}
+                onChange={(e) => {
+                    handleChange(e)
+                }}
+                onMouseUp={() => {
+                    setTooltip({ ...tooltip, display: 'none' });
+                }}
             />
+            <div
+                className="absolute bg-gray-300 px-2 py-1 rounded-md text-xs"
+                style={{
+                    display: tooltip.display,
+                    top: tooltip.top,
+                    left: tooltip.left,
+                }}
+            >
+                {tooltip.value}
+            </div>
         </div>
     );
 });
