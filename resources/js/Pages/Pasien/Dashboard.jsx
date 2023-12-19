@@ -217,7 +217,7 @@ export default function Dashboard({
                 <div className="max-w-full mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white  overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900 ">
-                            <div className="flex justify-center gap-16">
+                            <div className="flex justify-between gap-16">
                                 <div className="pl-1 w-96 h-20 bg-blue-400 rounded-lg shadow-md">
                                     <div className="flex w-full h-full py-2 px-4 bg-white rounded-lg justify-between">
                                         <div className="my-auto">
