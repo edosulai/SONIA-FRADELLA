@@ -22,7 +22,7 @@ export default function Index({
     const useFormInertia = useForm({
         nama_dokter: dokter ? dokter.nama_dokter : "",
         no_identitas: dokter ? dokter.no_identitas : 0,
-        spesialis_id: dokter ? dokter.spesialis_id : 0,
+        spesialis_id: dokter ? dokter.spesialis_id : spesialis[0].id,
     });
 
     const { data, setData, processing, errors, reset } = useFormInertia;

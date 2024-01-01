@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\StatusPasien;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,11 +28,11 @@ class UpdateRegistranRequest extends FormRequest
         return [
             'nama_pasien' => ['required', 'string'],
             'nama_kepala_keluarga' => ['required', 'string'],
-            'no_kartu' => ['required', 'integer'],
+            'no_kartu' => ['required', 'string'],
             'umur' => ['required', 'integer'],
             'alamat' => ['required'],
             'jenis_kelamin' => ['required', Rule::in(['laki-laki', 'perempuan'])],
-            'status' => ['required', Rule::in(['umum', 'jkm', 'bpjs'])],
+            'status_id' => ['required', 'exists:' . StatusPasien::class . ',id'],
         ];
     }
 }
