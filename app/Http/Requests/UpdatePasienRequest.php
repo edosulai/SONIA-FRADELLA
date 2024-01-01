@@ -26,7 +26,7 @@ class UpdatePasienRequest extends FormRequest
     public function rules()
     {
         return [
-            'no_kartu' => ['required', 'integer', 'exists:' . Registran::class . ',no_kartu'],
+            'no_kartu' => ['required', 'string', 'exists:' . Registran::class . ',no_kartu'],
             'jenis_unit' => ['required', 'array', 'exists:' . Unit::class . ',jenis_unit'],
         ];
     }

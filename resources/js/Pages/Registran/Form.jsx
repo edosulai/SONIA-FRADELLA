@@ -11,17 +11,17 @@ import SecondaryButton from "@/Components/SecondaryButton";
 import DangerButton from "@/Components/DangerButton";
 import TextAreaInput from "@/Components/TextAreaInput";
 
-export default function Index({ auth, status, title, registran = null }) {
+export default function Index({ auth, status, status_pasien, title, registran = null }) {
     const [confirmingDeletion, setConfirmingDeletion] = useState(false);
 
     const useFormInertia = useForm({
         nama_pasien: registran ? registran.nama_pasien : "",
         nama_kepala_keluarga: registran ? registran.nama_kepala_keluarga : "",
-        no_kartu: registran ? registran.no_kartu : 0,
+        no_kartu: registran ? registran.no_kartu : "",
         umur: registran ? registran.umur : 0,
         alamat: registran ? registran.alamat : "",
-        jenis_kelamin: registran ? registran.jenis_kelamin : "",
-        status: registran ? registran.status : "",
+        jenis_kelamin: registran ? registran.jenis_kelamin : "laki-laki",
+        status_id: registran ? registran.status_id : status_pasien[0].id,
     });
 
     const { data, setData, processing, errors, reset } = useFormInertia;
@@ -45,7 +45,7 @@ export default function Index({ auth, status, title, registran = null }) {
                 "umur",
                 "alamat",
                 "jenis_kelamin",
-                "status"
+                "status_id"
             );
         };
     }, []);
@@ -127,12 +127,12 @@ export default function Index({ auth, status, title, registran = null }) {
                                 <div className="mt-4">
                                     <InputLabel
                                         forInput="no_kartu"
-                                        value="Nama Kartu"
+                                        value="Nomor Kartu"
                                     />
 
                                     <TextInput
                                         id="no_kartu"
-                                        type="number"
+                                        type="text"
                                         name="no_kartu"
                                         value={data.no_kartu}
                                         className="mt-1 block w-full"
@@ -198,34 +198,24 @@ export default function Index({ auth, status, title, registran = null }) {
 
                                 <div className="mt-4">
                                     <InputLabel
-                                        forInput="status"
+                                        forInput="status_id"
                                         value="Status Pasien"
                                     />
 
                                     <SelectInput
-                                        id="status"
-                                        name="status"
-                                        value={data.status}
+                                        id="status_id"
+                                        name="status_id"
+                                        value={data.status_id}
                                         className="mt-1 block w-full"
                                         handleChange={onHandleChange}
-                                        options={[
-                                            {
-                                                label: "Umum",
-                                                value: "umum",
-                                            },
-                                            {
-                                                label: "JKM",
-                                                value: "jkm",
-                                            },
-                                            {
-                                                label: "BPJS",
-                                                value: "bpjs",
-                                            },
-                                        ]}
+                                        options={status_pasien.map(each => ({
+                                            label: each.status,
+                                            value: each.id,
+                                        }))}
                                     />
 
                                     <InputError
-                                        message={errors.status}
+                                        message={errors.status_id}
                                         className="mt-2"
                                     />
                                 </div>

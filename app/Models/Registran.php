@@ -21,6 +21,6 @@ class Registran extends Model
         'umur',
         'alamat',
         'jenis_kelamin',
-        'status',
+        'status_id',
     ];
 }

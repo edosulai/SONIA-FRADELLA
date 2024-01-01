@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Registran;
 use App\Http\Requests\StoreRegistranRequest;
 use App\Http\Requests\UpdateRegistranRequest;
+use App\Models\StatusPasien;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -34,6 +35,7 @@ class RegistranController extends Controller
         return Inertia::render('Registran/Form', [
             'title' => 'Tambah Registran',
             'status' => session('status'),
+            'status_pasien' => StatusPasien::all(),
         ]);
     }
 
@@ -52,7 +54,7 @@ class RegistranController extends Controller
             'umur' => $request->umur,
             'alamat' => $request->alamat,
             'jenis_kelamin' => $request->jenis_kelamin,
-            'status' => $request->status,
+            'status_id' => $request->status_id,
         ]);
 
         return redirect('registran');
@@ -83,6 +85,7 @@ class RegistranController extends Controller
         return Inertia::render('Registran/Form', [
             'title' => 'Edit Registran',
             'status' => session('status'),
+            'status_pasien' => StatusPasien::all(),
             'registran' => $registran,
         ]);
     }
@@ -105,7 +108,7 @@ class RegistranController extends Controller
         $registran->umur = $request->umur;
         $registran->alamat = $request->alamat;
         $registran->jenis_kelamin = $request->jenis_kelamin;
-        $registran->status = $request->status;
+        $registran->status_id = $request->status_id;
         $registran->save();
 
         return redirect()->route('registran')->with('status', 'Data Registran ' . $request->nama_pasien . ' Berhasil di Ubah');
